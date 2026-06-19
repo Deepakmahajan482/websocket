@@ -1,14 +1,21 @@
-import React from 'react'
+
 import {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 const CreateRoom = () => {
   const navigate=useNavigate();
-  function navigating(){
+  function navigating(e:any){
+    e.preventDefault();
     if(name!="" && room!="")
-    navigate("/chat",{state:{name,room}});
+    navigate("/chat", {
+      state: {
+        name,
+        room,
+      },
+    });
   }
 const [name,setName]=useState("");
 const[room,setRoom]=useState("");
+const[loading,setLoading]=useState(false);
 const [id,setId]=useState("");
 const[Generate,setGenerate]=useState(true);
   const roomId =Math.floor(100000 + Math.random() * 900000).toString()
@@ -24,10 +31,10 @@ const[Generate,setGenerate]=useState(true);
       </label>
       <label htmlFor='room' className='text-xl m-2'>Join Room
         <br />
-      <input className='border border-gray-400 p-2 pl-4 w-full mt-2 rounded-full'type="text" id='room' placeholder='Join the Room' value={room} onChange={(e)=>{setRoom(e.target.value)}} required/>
+      <input className='border border-gray-400 p-2 pl-4 w-full mt-2 rounded-full'type="text" id='room'  disabled={loading} placeholder='Join the Room' value={room} onChange={(e)=>{setRoom(e.target.value)}} required/>
       </label>
-      <button className='cursor-pointer text-xl p-4 m-5 text-black rounded-4xl   mt-4 bg-purple-300 text-500' onClick={()=>{navigating()}}>Click here to Join </button>
-      {Generate ? <span>Create a room ? <span className='text-blue-500 cursor-pointer' onClick={()=>{setId(roomId);setGenerate(false);}}>Click here</span></span>:
+      <button className='cursor-pointer text-xl p-4 m-5 text-black rounded-4xl   mt-4 bg-purple-300 text-500'  onClick={(e)=>{navigating(e)}}>Click here to Join </button>
+      {Generate ? <span>Create a room ? <span className='text-blue-500 cursor-pointer' onClick={()=>{setId(roomId);setGenerate(false);setRoom(roomId);setLoading(true)}}>Click here</span></span>:
       <p className='p-4 bg-red-500 text-xl rounded-2xl'>The Room  is  : {id}</p>}
       </div>
 </form>
