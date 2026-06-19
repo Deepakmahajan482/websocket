@@ -12,14 +12,14 @@ const Message = () => {
 
   const { name, room } = location.state;
 
-  console.log(name ," ",room)
+ 
    const[text,setText]=useState("");
   
   const [Message, setMessage] = useState<string[]>([])
   // @ts-ignore
   const wsRef=useRef();
   useEffect(() => {
-   const ws=new WebSocket('ws://localhost:8080')
+   const ws=new WebSocket('https://websocket-knsx.onrender.com')
    ws.onmessage=(event)=>{
     //  @ts-ignore
       setMessage(m=>[...m,event.data]);
@@ -39,18 +39,8 @@ const Message = () => {
    }
   }, [])
   
-  return (
-   <div className='text-white h-screen bg-black flex flex-col'>
-    <div className="flex justify-between p-6">
-    <div className="p-2 bg-gray-400 rounded-full"> User: {name}</div> <div className="p-2 bg-gray-400 rounded-full">  Room: {room}</div>
-    </div>
-    <div className='flex-1 overflow-y-auto px-4 py-2'>
-      {Message.map(message=><div className="m-8"><span className="bg-white  text-black p-4 rounded">{message}</span></div>)}
-    </div>
-    <div className='font-white w-full flex bg-white'>
-      <input value={text} onChange={(e) => setText(e.target.value)} type="text" placeholder='type a message' className='text-black border-none hover:border-none flex-1 p-4'></input>
-      <button onClick={()=>{
-         setMessage(m => [...m, `You : ${text}`]);
+  function sendMessage(){
+          setMessage(m => [...m, `You : ${text}`]);
         // @ts-ignore
         wsRef.current?.send(
       JSON.stringify({
@@ -62,6 +52,26 @@ const Message = () => {
     );
 
     setText("");
+  }
+  return (
+   <div className='text-white h-screen bg-black flex flex-col'>
+    <div className="flex justify-between p-6">
+    <div className="p-2 bg-gray-400 rounded-full"> User: {name}</div> <div className="p-2 bg-gray-400 rounded-full">  Room: {room}</div>
+    </div>
+    <div className='flex-1 overflow-y-auto px-4 py-2'>
+      {Message.map(message=><div className="m-8"><span className="bg-white  text-black p-4 rounded">{message}</span></div>)}
+    </div>
+    <div className='font-white w-full flex bg-white'>
+      <input value={text} onChange={(e) => setText(e.target.value)} type="text" placeholder='type a message' className='text-black border-none hover:border-none flex-1 p-4'
+       onKeyDown={(e) => {
+    if (e.key === "Enter") {
+      sendMessage();
+    }
+  }}>
+
+  </input>
+      <button onClick={()=>{
+   sendMessage;
       }
     }className=' bg-green-600 p-4 cursor-pointer'><IoMdSend size={32}/></button>
       </div>
