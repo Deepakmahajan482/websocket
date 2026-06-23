@@ -1,6 +1,6 @@
-import CreateRoom from "./CreateRoom"
+import CreateRoom from "./pages/CreateRoom"
 import { BrowserRouter,Route,Routes} from "react-router-dom"
-import Message from "./Message"
+import Message from "../src/pages/Message"
 
 const App = () => {
  return (

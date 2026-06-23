@@ -2,6 +2,7 @@
 import { IoMdSend } from "react-icons/io";
 import {useState,useEffect,useRef} from 'react';
 import { Navigate, useLocation } from "react-router-dom";
+import Header from "../pages/Header";
 
 const Message = () => {
    const location = useLocation();
@@ -40,6 +41,7 @@ const Message = () => {
   }, [])
   
   function sendMessage(){
+    if(text!=""){
           setMessage(m => [...m, `You : ${text}`]);
         // @ts-ignore
         wsRef.current?.send(
@@ -50,18 +52,20 @@ const Message = () => {
         }
       })
     );
+  }
 
     setText("");
   }
   return (
-   <div className='text-white h-screen bg-black flex flex-col p-10'>
-    <div className="flex justify-between p-6">
-    <div className="p-2 bg-gray-400 rounded-full"> User: {name}</div> <div className="p-2 bg-gray-400 rounded-full">  Room: {room}</div>
+   <div className='text-white h-screen bg-[#ece5dd] flex flex-col'>
+    <div className="flex justify-between ">
+    {/* <div className="p-2 bg-black rounded-full"> User: {name}</div> <div className="p-2 bg-black rounded-full">  Room: {room}</div> */}
+    <Header name={name} RoomId={room}/>
     </div>
-    <div className='flex-1 overflow-y-auto px-4 py-2'>
-      {Message.map(message=><div className="m-8"><span className="bg-white  text-black p-4 rounded">{message}</span></div>)}
+    <div className='flex-1 overflow-y-auto overflow-x-hidden px-4 py-2 mt-20'>
+      {Message.map((message,index)=>(message.split(':')[0] ==='You ')?(<div key={index} className="flex justify-end mb-3"><span className="bg-green-500 text-white p-3 rounded-lg max-w-[70%] break-words">{message.split(":")[1]}</span></div>):(<div key={index} className="flex justify-start mb-3"><span className="bg-green-500 text-white p-3 rounded-lg max-w-[70%] break-words">{message.split(":")[1]}</span></div>))}
     </div>
-    <div className='font-white w-full flex bg-white rounded-full' >
+    <div className='font-white w-full flex bg-white rounded-full  mb-4' >
       <input value={text} onChange={(e) => setText(e.target.value)} type="text" placeholder='type a message' className='rounded-full text-black border-none hover:border-none flex-1 p-4'
        onKeyDown={(e) => {
     if (e.key === "Enter") {
