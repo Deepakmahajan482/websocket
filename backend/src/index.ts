@@ -1,6 +1,12 @@
 import { WebSocketServer, WebSocket } from "ws";
 import { createServer } from "http";
+import express from "express";
+import auth from '../src/routes/Authentication.js'
+const app=express();
 
+app.use(express.json())
+
+app.use("/api/auth",auth)
 const server = createServer((req, res) => {
   res.writeHead(200, { "Content-Type": "text/plain" });
   res.end("WebSocket Server Running");
@@ -64,7 +70,9 @@ wss.on("connection", (socket) => {
 });
 
 const PORT = Number(process.env.PORT) || 8080;
-
+app.listen(PORT,()=>{
+  console.log('sever is running')
+})
 server.listen(PORT, () => {
   console.log(`WebSocket server running on ${PORT}`);
 });
